@@ -27,7 +27,7 @@ export default async function handler(req, res) {
             const sells = await alchemy.core.getAssetTransfers({
                 toBlock: "latest",
                 fromAddress: wallet,
-                contractAddresses: [token, WETH_ADDRESS],
+                contractAddresses: [token],
                 withMetadata: true,
                 category: ["erc20"],
             })
@@ -50,6 +50,10 @@ export default async function handler(req, res) {
                         const to = '0x' + log.topics[2].slice(26);
                         const token = log.address;
                         const amount = web3.utils.fromWei(web3.utils.toBigInt(log.data), 'ether')  // Amount is stored in the log data
+
+                        // only count the amount if the to address is not the wallet address
+
+                        // if (from.toLowerCase() !== wallet.toLowerCase()) return;
 
                         if (token.toLowerCase() === WETH_ADDRESS.toLowerCase()) {
                             trade.wethAmount = amount
@@ -76,6 +80,7 @@ export default async function handler(req, res) {
 
             const buyTxns = buys.transfers.map(async (txn) => {
                 const txHash = txn.hash
+                // hash already exists, skip it 
 
                 const txnReceipt = await alchemy.core.getTransactionReceipt(txHash)
 
@@ -92,6 +97,9 @@ export default async function handler(req, res) {
                         const to = '0x' + log.topics[2].slice(26);
                         const token = log.address;
                         const amount = web3.utils.fromWei(web3.utils.toBigInt(log.data), 'ether')  // Amount is stored in the log data
+                        // only count the amount if the from address is not the wallet address
+                        // if (to.toLowerCase() !== wallet.toLowerCase()) return;
+
 
                         if (token.toLowerCase() === WETH_ADDRESS.toLowerCase()) {
                             trade.wethAmount = amount
@@ -104,13 +112,33 @@ export default async function handler(req, res) {
                 return trade
             })
 
+            // remove duplicates from the array just keep the one 
+            const filteredSellTxns = sellTxns.filter((txn, index, self) =>
+                index === self.findIndex((t) => (
+                    t.txHash === txn.txHash
+                ))
+            )
+
+            const filteredBuyTxns = buyTxns.filter((txn, index, self) =>
+                index === self.findIndex((t) => (
+                    t.txHash === txn.txHash
+                ))
+            )
+
+
+
+
+
             // get a sum of all the weth and token amounts for sells
             let sellTotal = {
                 wethAmount: 0,
                 tokenAmount: 0,
             }
 
-            for (const trade of await Promise.all(sellTxns)) {
+            for (const trade of await Promise.all(filteredSellTxns)) {
+                if (!trade) continue;
+
+
                 sellTotal.wethAmount += parseFloat(trade.wethAmount)
                 sellTotal.tokenAmount += parseFloat(trade.tokenAmount)
             }
@@ -122,10 +150,16 @@ export default async function handler(req, res) {
                 tokenAmount: 0,
             }
 
-            for (const trade of await Promise.all(buyTxns)) {
+            for (const trade of await Promise.all(filteredBuyTxns)) {
+                if (!trade) continue;
+
+
+
                 buyTotal.wethAmount += parseFloat(trade.wethAmount)
                 buyTotal.tokenAmount += parseFloat(trade.tokenAmount)
             }
+
+
 
 
             const realizedProfitLoss = {
@@ -140,9 +174,9 @@ export default async function handler(req, res) {
 
             res.status(200).json({
                 // sells: sells.transfers,
-                sellTxns: await Promise.all(sellTxns),
+                sellTxns: await Promise.all(filteredSellTxns),
                 // buys: buys.transfers,
-                buyTxns: await Promise.all(buyTxns),
+                buyTxns: await Promise.all(filteredBuyTxns),
                 buyTotal,
                 sellTotal,
                 realizedProfitLoss,
