@@ -1,4 +1,5 @@
 import { Alchemy, Network } from "alchemy-sdk";
+import axios from "axios";
 
 const config = {
   apiKey: "TMbUqfFKq008ZyBmPSc6gLKw1s-oUQnX",
@@ -7,169 +8,269 @@ const config = {
 
 async function getSales(wallet, token, alchemy) {
   const SELL = [];
-  const ERC20 = [];
-  const sells = await alchemy.core.getAssetTransfers({
-    toBlock: "latest",
-    fromAddress: wallet,
-    contractAddresses: [token],
-    withMetadata: true,
-    category: ["ERC721", "ERC1155", "ERC20"],
-  });
 
-  await Promise.all(
-    sells.transfers.map(async (sold) => {
-      const txhash = sold.hash;
-      const tx = await alchemy.transact.getTransaction(txhash);
-      const block = await alchemy.core.getBlock(tx.blockNumber);
-      const timestamp = block.timestamp;
-      const value = parseInt(tx.value._hex, 16) / 10 ** 18;
-      const recpt = await alchemy.core.getTransactionReceipt(txhash);
-      const res = recpt.logs.filter((transaction) => {
-        return transaction.topics.includes(
-          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
-        );
-      });
+  while (1) {
+    var f;
+    const sales = await alchemy.nft.getNftSales({
+      toBlock: "latest",
+      sellerAddress: wallet,
+      pageKey: f,
+    });
 
-      await Promise.all(
-        res.map(async (tken) => {
-          if (tken.address !== token) {
-            const tokenmeta = await alchemy.core.getTokenMetadata(tken.address);
-            const decimals = tokenmeta.decimals;
-            const logo = tokenmeta.logo;
-            const symbol = tokenmeta.symbol;
-            const value = parseInt(tken.data) / 10 ** decimals;
-            ERC20.push({
-              symbol: symbol,
-              logo: logo,
-              value: value,
-            });
+    Promise.all(
+      sales.nftSales.map(async (sold) => {
+        const contract_address = sold.contractAddress;
+        const tokenId = sold.tokenId;
+        const tx_hash = sold.transactionHash;
+        const tokensymbol =
+          sold.sellerFee.symbol ||
+          sold.protocolFee.symbol ||
+          sold.royaltyFee.symbol ||
+          sold.marketplaceFee.symbol;
+
+        const tokenAddress =
+          sold.sellerFee.tokenAddress ||
+          sold.protocolFee.tokenAddress ||
+          sold.royaltyFee.tokenAddress ||
+          sold.marketplaceFee.tokenAddress;
+
+        var blockNumber = sold.blockNumber;
+        // try {
+        //   const block = await alchemy.core.getBlock();
+        //   timestamp = block.timestamp;
+        // } catch (err) {
+        //   console.log("ok");
+        // }
+        var s1,
+          s2,
+          s3 = 0;
+
+        var amount = 0;
+
+        if (sold.sellerFee.amount && sold.sellerFee.decimals) {
+          s1 = sold.sellerFee.amount / 10 ** sold.sellerFee.decimals;
+          amount += s1;
+        }
+        if (sold.protocolFee.amount && sold.protocolFee.decimals) {
+          s2 = sold.protocolFee.amount / 10 ** sold.protocolFee.decimals;
+          amount += s2;
+        }
+        if (sold.royaltyFee.amount && sold.royaltyFee.decimals) {
+          s3 = sold.royaltyFee.amount / 10 ** sold.royaltyFee.decimals;
+          amount += s3;
+        }
+
+        if (sold.marketplaceFee.amount && sold.marketplaceFee.decimals) {
+          amount +=
+            sold.marketplaceFee.amount / 10 ** sold.marketplaceFee.decimals;
+        }
+
+        if (tokenAddress === "0x0000000000a39bb272e79075ade125fd351887ac") {
+          if (sold.sellerFee.amount) {
+            s1 = sold.sellerFee.amount / 10 ** 18;
+            amount += s1;
           }
-        })
-      );
+          if (sold.protocolFee.amount) {
+            s2 = sold.protocolFee.amount / 10 ** 18;
+            amount += s2;
+          }
+          if (sold.royaltyFee.amount) {
+            s3 = sold.royaltyFee.amount / 10 ** 18;
+            amount += s3;
+          }
 
-      SELL.push({
-        tokenId: parseInt(sold.tokenId, 16),
-        txhash: txhash,
-        value: value,
-        timestamp: timestamp,
-        ERC20: ERC20,
-      });
-    })
-  );
+          if (sold.marketplaceFee.amount) {
+            amount += sold.marketplaceFee.amount / 10 ** 18;
+          }
+        }
+
+        SELL.push({
+          contract_address: contract_address,
+          tokenId: tokenId,
+          tx_hash: tx_hash,
+          amount: amount,
+          tokensymbol: tokensymbol,
+          blockNumber: blockNumber,
+          tokenAddress: tokenAddress,
+        });
+      })
+    );
+
+    if (sales.pageKey === undefined) {
+      break;
+    }
+    f = sales.pageKey;
+  }
 
   return SELL;
 }
 
 async function getMints(wallet, token, alchemy) {
   const MINTS = [];
-  const ERC20 = [];
+  var pageKey;
 
-  const nftdata = {
-    contractAddresses: [token],
-    tokenType: ["ERC721", "ERC1155", "ERC20"],
-  };
+  while (1) {
+    const nftdata = {
+      tokenType: ["ERC721", "ERC1155"],
+      pageKey: pageKey,
+    };
 
-  const mints = await alchemy.nft.getMintedNfts(wallet, nftdata);
+    const mints = await alchemy.nft.getMintedNfts(wallet, nftdata);
+    //console.log(mints.nfts.length);
+    await Promise.all(
+      mints.nfts.map(async (nft) => {
+        const ERC20 = [];
+        try {
+          const txhash = nft.transactionHash;
+          const tx = await alchemy.transact.getTransaction(txhash);
+          const value = parseInt(tx.value._hex, 16) / 10 ** 18;
+          const recpt = await alchemy.core.getTransactionReceipt(txhash);
+          const res = recpt.logs.filter((transaction) => {
+            return transaction.topics.includes(
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+            );
+          });
 
-  await Promise.all(
-    mints.nfts.map(async (nft) => {
-      const txhash = nft.transactionHash;
-      const tx = await alchemy.transact.getTransaction(txhash);
-      const block = await alchemy.core.getBlock(tx.blockNumber);
-      const timestamp = block.timestamp;
-      const value = parseInt(tx.value._hex, 16) / 10 ** 18;
-      const recpt = await alchemy.core.getTransactionReceipt(txhash);
-      const res = recpt.logs.filter((transaction) => {
-        return transaction.topics.includes(
-          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
-        );
-      });
-      await Promise.all(
-        res.map(async (tken) => {
-          if (tken.address !== token) {
-            const tokenmeta = await alchemy.core.getTokenMetadata(tken.address);
-            const decimals = tokenmeta.decimals;
-            const logo = tokenmeta.logo;
-            const symbol = tokenmeta.symbol;
-            const value = parseInt(tken.data) / 10 ** decimals;
-            ERC20.push({
-              symbol: symbol,
-              logo: logo,
-              value: value,
-            });
-          }
-        })
-      );
+          await Promise.all(
+            res.map(async (tken) => {
+              if (
+                tken.address.toLowerCase() !==
+                nft.contract.address.toLowerCase()
+              ) {
+                // console.log(tken);
+                const tokenmeta = await alchemy.core.getTokenMetadata(
+                  tken.address
+                );
+                const decimals = tokenmeta.decimals;
+                const logo = tokenmeta.logo;
+                const symbol = tokenmeta.symbol;
+                const value = parseInt(tken.data) / 10 ** decimals;
+                if (value) {
+                  ERC20.push({
+                    symbol: symbol,
+                    logo: logo,
+                    value: value,
+                  });
+                }
+              }
+            })
+          );
 
-      MINTS.push({
-        tokenId: nft.tokenId,
-        txhash: nft.transactionHash,
-        value: value,
-        timestamp: timestamp,
-        ERC20: ERC20,
-      });
-    })
-  );
+          MINTS.push({
+            tokenId: nft.tokenId,
+            txhash: nft.transactionHash,
+            value: value,
+            ERC20: ERC20,
+          });
+        } catch (err) {
+          //console.log(err);
+        }
+      })
+    );
 
+    if (mints.pageKey === undefined) {
+      break;
+    }
+    pageKey = mints.pageKey;
+  }
   return MINTS;
 }
 
 async function getPurchases(wallet, token, alchemy) {
   const BUY = [];
-  const ERC20 = [];
 
-  const buys = await alchemy.core.getAssetTransfers({
-    toBlock: "latest",
-    toAddress: wallet,
-    contractAddresses: [token],
-    withMetadata: true,
-    category: ["ERC721", "ERC1155", "ERC20"],
-  });
+  while (1) {
+    var f;
+    const purchases = await alchemy.nft.getNftSales({
+      toBlock: "latest",
+      buyerAddress: wallet,
+      pageKey: f,
+    });
 
-  await Promise.all(
-    buys.transfers.map(async (txn) => {
-      const txHash = txn.hash;
-      console.log(txn.from);
-      if (txn.from !== "0x0000000000000000000000000000000000000000") {
-        const tx = await alchemy.transact.getTransaction(txHash);
-        const block = await alchemy.core.getBlock(tx.blockNumber);
-        const recpt = await alchemy.core.getTransactionReceipt(txHash);
-        const res = recpt.logs.filter((transaction) => {
-          return transaction.topics.includes(
-            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
-          );
-        });
-        await Promise.all(
-          res.map(async (tken) => {
-            if (tken.address !== token) {
-              const tokenmeta = await alchemy.core.getTokenMetadata(
-                tken.address
-              );
-              const decimals = tokenmeta.decimals;
-              const logo = tokenmeta.logo;
-              const symbol = tokenmeta.symbol;
-              const value = parseInt(tken.data) / 10 ** decimals;
-              ERC20.push({
-                symbol: symbol,
-                logo: logo,
-                value: value,
-              });
-            }
-          })
-        );
+    Promise.all(
+      purchases.nftSales.map(async (bought) => {
+        const contract_address = bought.contractAddress;
+        const tokenId = bought.tokenId;
+        const tx_hash = bought.transactionHash;
+        const tokensymbol =
+          bought.sellerFee.symbol ||
+          bought.protocolFee.symbol ||
+          bought.royaltyFee.symbol ||
+          bought.marketplaceFee.symbol;
 
-        const timestamp = block.timestamp;
-        const value = parseInt(tx.value._hex, 16) / 10 ** 18;
+        const tokenAddress =
+          bought.sellerFee.tokenAddress ||
+          bought.protocolFee.tokenAddress ||
+          bought.royaltyFee.tokenAddress ||
+          bought.marketplaceFee.tokenAddress;
+
+        var blockNumber = bought.blockNumber;
+        // try {
+        //   const block = await alchemy.core.getBlock();
+        //   timestamp = block.timestamp;
+        // } catch (err) {
+        //   console.log("ok");
+        // }
+        var s1,
+          s2,
+          s3 = 0;
+
+        var amount = 0;
+
+        if (bought.sellerFee.amount && bought.sellerFee.decimals) {
+          s1 = bought.sellerFee.amount / 10 ** bought.sellerFee.decimals;
+          amount += s1;
+        }
+        if (bought.protocolFee.amount && bought.protocolFee.decimals) {
+          s2 = bought.protocolFee.amount / 10 ** bought.protocolFee.decimals;
+          amount += s2;
+        }
+        if (bought.royaltyFee.amount && bought.royaltyFee.decimals) {
+          s3 = bought.royaltyFee.amount / 10 ** bought.royaltyFee.decimals;
+          amount += s3;
+        }
+
+        if (bought.marketplaceFee.amount && bought.marketplaceFee.decimals) {
+          amount +=
+            bought.marketplaceFee.amount / 10 ** bought.marketplaceFee.decimals;
+        }
+
+        if (tokenAddress === "0x0000000000a39bb272e79075ade125fd351887ac") {
+          if (bought.sellerFee.amount) {
+            s1 = bought.sellerFee.amount / 10 ** 18;
+            amount += s1;
+          }
+          if (bought.protocolFee.amount) {
+            s2 = bought.protocolFee.amount / 10 ** 18;
+            amount += s2;
+          }
+          if (bought.royaltyFee.amount) {
+            s3 = sold.royaltyFee.amount / 10 ** 18;
+            amount += s3;
+          }
+
+          if (bought.marketplaceFee.amount) {
+            amount += bought.marketplaceFee.amount / 10 ** 18;
+          }
+        }
+
         BUY.push({
-          tokenId: parseInt(txn.tokenId, 16),
-          txhash: txHash,
-          value: value,
-          timestamp: timestamp,
-          ERC20: ERC20,
+          contract_address: contract_address,
+          tokenId: tokenId,
+          tx_hash: tx_hash,
+          amount: amount,
+          tokensymbol: tokensymbol,
+          blockNumber: blockNumber,
+          tokenAddress: tokenAddress,
         });
-      }
-    })
-  );
+      })
+    );
+
+    if (purchases.pageKey === undefined) {
+      break;
+    }
+    f = purchases.pageKey;
+  }
 
   return BUY;
 }
@@ -197,7 +298,7 @@ export default async function handler(req, res) {
         });
       } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "An error occurred." });
+        res.status(500).json({ error: error.message });
       }
       break;
     default:
