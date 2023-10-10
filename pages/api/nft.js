@@ -1,6 +1,4 @@
 import { Alchemy, Network } from "alchemy-sdk";
-import axios from "axios";
-
 const config = {
   apiKey: "TMbUqfFKq008ZyBmPSc6gLKw1s-oUQnX",
   network: Network.ETH_MAINNET,
@@ -11,11 +9,18 @@ async function getSales(wallet, token, alchemy) {
 
   while (1) {
     var f;
-    const sales = await alchemy.nft.getNftSales({
+    const contractAddress = token;
+    var sales = await alchemy.nft.getNftSales({
       toBlock: "latest",
       sellerAddress: wallet,
       pageKey: f,
     });
+
+    if (contractAddress) {
+      sales.nftSales = sales.nftSales.filter(
+        (nfts) => nfts.contractAddress === contractAddress
+      );
+    }
 
     Promise.all(
       sales.nftSales.map(async (sold) => {
@@ -113,10 +118,10 @@ async function getMints(wallet, token, alchemy) {
     const nftdata = {
       tokenType: ["ERC721", "ERC1155"],
       pageKey: pageKey,
+      ...(token ? { contractAddresses: [token] } : {}),
     };
 
     const mints = await alchemy.nft.getMintedNfts(wallet, nftdata);
-    //console.log(mints.nfts.length);
     await Promise.all(
       mints.nfts.map(async (nft) => {
         const ERC20 = [];
@@ -161,6 +166,7 @@ async function getMints(wallet, token, alchemy) {
             txhash: nft.transactionHash,
             value: value,
             ERC20: ERC20,
+            blockNumber: mints.blockNumber,
           });
         } catch (err) {
           //console.log(err);
@@ -179,6 +185,8 @@ async function getMints(wallet, token, alchemy) {
 async function getPurchases(wallet, token, alchemy) {
   const BUY = [];
 
+  const contractAddress = token;
+
   while (1) {
     var f;
     const purchases = await alchemy.nft.getNftSales({
@@ -186,6 +194,12 @@ async function getPurchases(wallet, token, alchemy) {
       buyerAddress: wallet,
       pageKey: f,
     });
+
+    if (contractAddress) {
+      purchases.nftSales = purchases.nftSales.filter(
+        (nfts) => nfts.contractAddress === contractAddress
+      );
+    }
 
     Promise.all(
       purchases.nftSales.map(async (bought) => {

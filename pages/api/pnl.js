@@ -1,192 +1,74 @@
-import Web3 from "web3";
-import BigNumber from "bignumber.js";
-import { Alchemy, Network } from "alchemy-sdk";
-const config = {
-    apiKey: "TMbUqfFKq008ZyBmPSc6gLKw1s-oUQnX",
-    network: Network.ETH_MAINNET,
-};
+import axios from "axios";
+import _ from "underscore";
+
+async function getTotalPNL(vr) {
+  const RESP = {};
+  var Tokens = [];
+  vr.data.Analysis.Sales.map((sales) => {
+    if (sales.tokenAddress === "0x0000000000a39bb272e79075ade125fd351887ac") {
+      Tokens.push("BLUR");
+    } else {
+      Tokens.push(sales.tokensymbol);
+    }
+  });
+
+  var tokens = _.uniq(Tokens);
+
+  tokens.map((token) => {
+    const tBal = vr.data.Analysis.Sales.filter(
+      (sales) =>
+        sales.tokensymbol === token ||
+        sales.tokenAddress === "0x0000000000a39bb272e79075ade125fd351887ac"
+    );
+
+    var tokenBal = 0;
+    tBal.map((amount) => {
+      tokenBal += amount.amount;
+    });
+    console.log("SELL", token, tokenBal);
+  });
+
+  Tokens = [];
+  vr.data.Analysis.Purchases.map((purchase) => {
+    if (
+      purchase.tokenAddress === "0x0000000000a39bb272e79075ade125fd351887ac"
+    ) {
+      Tokens.push("BlUR");
+    } else {
+      Tokens.push(purchase.tokensymbol);
+    }
+  });
+
+  tokens = _.uniq(Tokens);
+
+  tokens.map((token) => {
+    const tBal = vr.data.Analysis.Purchases.filter(
+      (purchase) =>
+        purchase.tokensymbol === token ||
+        purchase.tokenAddress === "0x0000000000a39bb272e79075ade125fd351887ac"
+    );
+    var tokenBal = 0;
+    tBal.map((amount) => {
+      tokenBal += amount.amount;
+    });
+    console.log("PURCHASED", token, tokenBal);
+  });
+}
 
 export default async function handler(req, res) {
-    const { method } = req;
+  const { method } = req;
+  const { wallet } = req.query;
+  const { token } = req.query;
 
-    const { wallet } = req.query;
-
-    const { token } = req.query;
-
-
-    const WETH_ADDRESS = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
-    const TRANSFER_EVENT_SIGNATURE = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
-
-
-
-    switch (method) {
-        case "GET":
-            const web3 = new Web3(new Web3.providers.HttpProvider('https://eth-mainnet.g.alchemy.com/v2/TMbUqfFKq008ZyBmPSc6gLKw1s-oUQnX'));
-            const alchemy = new Alchemy(config);
-
-            const sells = await alchemy.core.getAssetTransfers({
-                toBlock: "latest",
-                fromAddress: wallet,
-                contractAddresses: [token],
-                withMetadata: true,
-                category: ["erc20"],
-            })
-
-            const sellTxns = sells.transfers.map(async (txn) => {
-                const txHash = txn.hash
-
-                const txnReceipt = await alchemy.core.getTransactionReceipt(txHash)
-
-                const trade = {
-                    txHash,
-                    wethAmount: 0,
-                    tokenAmount: 0,
-                }
-
-                for (const log of txnReceipt.logs) {
-                    if (log.topics[0] === TRANSFER_EVENT_SIGNATURE) {
-                        // Decode the ERC-20 Transfer event
-                        const from = '0x' + log.topics[1].slice(26);  // Topics are 32 bytes; Ethereum addresses are 20 bytes
-                        const to = '0x' + log.topics[2].slice(26);
-                        const token = log.address;
-                        const amount = web3.utils.fromWei(web3.utils.toBigInt(log.data), 'ether')  // Amount is stored in the log data
-
-                        // only count the amount if the to address is not the wallet address
-
-                        // if (from.toLowerCase() !== wallet.toLowerCase()) return;
-
-                        if (token.toLowerCase() === WETH_ADDRESS.toLowerCase()) {
-                            trade.wethAmount = amount
-                        } else {
-                            trade.tokenAmount = amount
-                        }
-                    }
-                }
-
-                return trade
-
-
-
-            })
-
-
-            const buys = await alchemy.core.getAssetTransfers({
-                toBlock: "latest",
-                toAddress: wallet,
-                contractAddresses: [token],
-                withMetadata: true,
-                category: ["erc20"],
-            })
-
-            const buyTxns = buys.transfers.map(async (txn) => {
-                const txHash = txn.hash
-                // hash already exists, skip it 
-
-                const txnReceipt = await alchemy.core.getTransactionReceipt(txHash)
-
-                const trade = {
-                    txHash,
-                    wethAmount: 0,
-                    tokenAmount: 0,
-                }
-
-                for (const log of txnReceipt.logs) {
-                    if (log.topics[0] === TRANSFER_EVENT_SIGNATURE) {
-                        // Decode the ERC-20 Transfer event
-                        const from = '0x' + log.topics[1].slice(26);  // Topics are 32 bytes; Ethereum addresses are 20 bytes
-                        const to = '0x' + log.topics[2].slice(26);
-                        const token = log.address;
-                        const amount = web3.utils.fromWei(web3.utils.toBigInt(log.data), 'ether')  // Amount is stored in the log data
-                        // only count the amount if the from address is not the wallet address
-                        // if (to.toLowerCase() !== wallet.toLowerCase()) return;
-
-
-                        if (token.toLowerCase() === WETH_ADDRESS.toLowerCase()) {
-                            trade.wethAmount = amount
-                        } else {
-                            trade.tokenAmount = amount
-                        }
-                    }
-                }
-
-                return trade
-            })
-
-            // remove duplicates from the array just keep the one 
-            const filteredSellTxns = sellTxns.filter((txn, index, self) =>
-                index === self.findIndex((t) => (
-                    t.txHash === txn.txHash
-                ))
-            )
-
-            const filteredBuyTxns = buyTxns.filter((txn, index, self) =>
-                index === self.findIndex((t) => (
-                    t.txHash === txn.txHash
-                ))
-            )
-
-
-
-
-
-            // get a sum of all the weth and token amounts for sells
-            let sellTotal = {
-                wethAmount: 0,
-                tokenAmount: 0,
-            }
-
-            for (const trade of await Promise.all(filteredSellTxns)) {
-                if (!trade) continue;
-
-
-                sellTotal.wethAmount += parseFloat(trade.wethAmount)
-                sellTotal.tokenAmount += parseFloat(trade.tokenAmount)
-            }
-
-            // get a sum of all the weth and token amounts for buys
-
-            let buyTotal = {
-                wethAmount: 0,
-                tokenAmount: 0,
-            }
-
-            for (const trade of await Promise.all(filteredBuyTxns)) {
-                if (!trade) continue;
-
-
-
-                buyTotal.wethAmount += parseFloat(trade.wethAmount)
-                buyTotal.tokenAmount += parseFloat(trade.tokenAmount)
-            }
-
-
-
-
-            const realizedProfitLoss = {
-                wethAmount: sellTotal.wethAmount - buyTotal.wethAmount,
-            }
-
-            const unRealizedProfitLoss = {
-                wethAmount: 0,
-            }
-
-
-
-            res.status(200).json({
-                // sells: sells.transfers,
-                sellTxns: await Promise.all(filteredSellTxns),
-                // buys: buys.transfers,
-                buyTxns: await Promise.all(filteredBuyTxns),
-                buyTotal,
-                sellTotal,
-                realizedProfitLoss,
-                unRealizedProfitLoss
-            });
-
-            break;
-        default:
-            res.setHeader("Allow", ["GET"]);
-            res.status(405).end(`Method ${method} Not Allowed`);
-    }
-
+  switch (method) {
+    case "GET":
+      const vr = await axios.get(
+        `http://localhost:3000/api/nft?wallet=${wallet}&token=${token}`
+      );
+      getTotalPNL(vr);
+      break;
+    default:
+      res.setHeader("Allow", ["GET"]);
+      res.status(405).end(`Method ${method} Not Allowed`);
+  }
 }
