@@ -14,6 +14,7 @@ async function getSales(wallet, token, alchemy) {
       toBlock: "latest",
       sellerAddress: wallet,
       pageKey: f,
+      
     });
 
     if (contractAddress) {
