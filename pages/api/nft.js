@@ -26,6 +26,10 @@ async function getSales(wallet, token, alchemy) {
       sales.nftSales.map(async (sold) => {
         const contract_address = sold.contractAddress;
         const tokenId = sold.tokenId;
+        const nftMetadata = await alchemy.nft.getNftMetadata(
+          contract_address,
+          tokenId
+        );
         const tx_hash = sold.transactionHash;
         const tokensymbol =
           sold.sellerFee.symbol ||
@@ -97,6 +101,7 @@ async function getSales(wallet, token, alchemy) {
           tokensymbol: tokensymbol,
           blockNumber: blockNumber,
           tokenAddress: tokenAddress,
+          media: nftMetadata.media,
         });
       })
     );
@@ -161,12 +166,19 @@ async function getMints(wallet, token, alchemy) {
             })
           );
 
+          const nftMetadata = await alchemy.nft.getNftMetadata(
+            nft.contract.address,
+            nft.tokenId
+          );
+
           MINTS.push({
             tokenId: nft.tokenId,
             txhash: nft.transactionHash,
             value: value,
             ERC20: ERC20,
-            blockNumber: mints.blockNumber,
+            blockNumber: nft.blockNumber,
+            contract_address: nft.contract.address,
+            media: nftMetadata.media,
           });
         } catch (err) {
           //console.log(err);
@@ -205,6 +217,10 @@ async function getPurchases(wallet, token, alchemy) {
       purchases.nftSales.map(async (bought) => {
         const contract_address = bought.contractAddress;
         const tokenId = bought.tokenId;
+        const nftMetadata = await alchemy.nft.getNftMetadata(
+          contract_address,
+          tokenId
+        );
         const tx_hash = bought.transactionHash;
         const tokensymbol =
           bought.sellerFee.symbol ||
@@ -219,12 +235,7 @@ async function getPurchases(wallet, token, alchemy) {
           bought.marketplaceFee.tokenAddress;
 
         var blockNumber = bought.blockNumber;
-        // try {
-        //   const block = await alchemy.core.getBlock();
-        //   timestamp = block.timestamp;
-        // } catch (err) {
-        //   console.log("ok");
-        // }
+
         var s1,
           s2,
           s3 = 0;
@@ -276,6 +287,7 @@ async function getPurchases(wallet, token, alchemy) {
           tokensymbol: tokensymbol,
           blockNumber: blockNumber,
           tokenAddress: tokenAddress,
+          nftMetadata: nftMetadata.media,
         });
       })
     );
@@ -311,7 +323,7 @@ export default async function handler(req, res) {
           Analysis,
         });
       } catch (error) {
-        console.error(error);
+        console.log(error.message);
         res.status(500).json({ error: error.message });
       }
       break;

@@ -2,7 +2,6 @@ import axios from "axios";
 import _ from "underscore";
 
 async function getTotalPNL(vr) {
-  const RESP = {};
   var Tokens = [];
   vr.data.Analysis.Sales.map((sales) => {
     if (sales.tokenAddress === "0x0000000000a39bb272e79075ade125fd351887ac") {
@@ -53,6 +52,24 @@ async function getTotalPNL(vr) {
     });
     console.log("PURCHASED", token, tokenBal);
   });
+
+  var mintamountETH = 0;
+  var tokenamount = 0;
+  var temp = {};
+  vr.data.Analysis.Mints.map((mints) => {
+    temp = {};
+    if ((mints.ERC20 = [])) {
+      mintamountETH += mints.value;
+    } else {
+      temp.symbol = mints.ERC20[0].symbol;
+      console.log(mints.ERC20);
+      mints.ERC20.map((tk) => {
+        temp.amount += tk.value;
+      });
+    }
+  });
+  console.log("MINT", "ETH", mintamountETH);
+  console.log("MINT", temp.symbol, temp.amount);
 }
 
 export default async function handler(req, res) {
