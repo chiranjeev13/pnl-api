@@ -6,7 +6,6 @@ const config = {
 
 async function getSales(wallet, token, alchemy) {
   const SELL = [];
-
   while (1) {
     var f;
     const contractAddress = token;
@@ -14,7 +13,6 @@ async function getSales(wallet, token, alchemy) {
       toBlock: "latest",
       sellerAddress: wallet,
       pageKey: f,
-      
     });
 
     if (contractAddress) {
@@ -94,6 +92,9 @@ async function getSales(wallet, token, alchemy) {
           }
         }
 
+        const timestamp = (await alchemy.core.getBlock(parseInt(blockNumber)))
+          .timestamp;
+
         SELL.push({
           contract_address: contract_address,
           tokenId: tokenId,
@@ -103,6 +104,8 @@ async function getSales(wallet, token, alchemy) {
           blockNumber: blockNumber,
           tokenAddress: tokenAddress,
           media: nftMetadata.media,
+          timestamp: timestamp,
+          floorprice: nftMetadata.contract.openSea.floorPrice,
         });
       })
     );
@@ -172,14 +175,18 @@ async function getMints(wallet, token, alchemy) {
             nft.tokenId
           );
 
+          const t = parseInt(nft.blockNumber, 16);
+          const timestamp = (await alchemy.core.getBlock(t)).timestamp;
           MINTS.push({
             tokenId: nft.tokenId,
-            txhash: nft.transactionHash,
+            tx_hash: nft.transactionHash,
             value: value,
             ERC20: ERC20,
             blockNumber: nft.blockNumber,
             contract_address: nft.contract.address,
             media: nftMetadata.media,
+            floorprice: nftMetadata.contract.openSea.floorPrice,
+            timestamp: timestamp,
           });
         } catch (err) {
           //console.log(err);
@@ -197,11 +204,9 @@ async function getMints(wallet, token, alchemy) {
 
 async function getPurchases(wallet, token, alchemy) {
   const BUY = [];
-
   const contractAddress = token;
-
-  while (1) {
-    var f;
+  let f;
+  while (true) {
     const purchases = await alchemy.nft.getNftSales({
       toBlock: "latest",
       buyerAddress: wallet,
@@ -214,88 +219,93 @@ async function getPurchases(wallet, token, alchemy) {
       );
     }
 
-    Promise.all(
-      purchases.nftSales.map(async (bought) => {
-        const contract_address = bought.contractAddress;
-        const tokenId = bought.tokenId;
-        const nftMetadata = await alchemy.nft.getNftMetadata(
-          contract_address,
-          tokenId
-        );
-        const tx_hash = bought.transactionHash;
-        const tokensymbol =
-          bought.sellerFee.symbol ||
-          bought.protocolFee.symbol ||
-          bought.royaltyFee.symbol ||
-          bought.marketplaceFee.symbol;
+    const promises = purchases.nftSales.map(async (bought) => {
+      const contract_address = bought.contractAddress;
+      const tokenId = bought.tokenId;
+      const nftMetadata = await alchemy.nft.getNftMetadata(
+        contract_address,
+        tokenId
+      );
+      const tx_hash = bought.transactionHash;
+      const tokensymbol =
+        bought.sellerFee.symbol ||
+        bought.protocolFee.symbol ||
+        bought.royaltyFee.symbol ||
+        bought.marketplaceFee.symbol;
 
-        const tokenAddress =
-          bought.sellerFee.tokenAddress ||
-          bought.protocolFee.tokenAddress ||
-          bought.royaltyFee.tokenAddress ||
-          bought.marketplaceFee.tokenAddress;
+      const tokenAddress =
+        bought.sellerFee.tokenAddress ||
+        bought.protocolFee.tokenAddress ||
+        bought.royaltyFee.tokenAddress ||
+        bought.marketplaceFee.tokenAddress;
 
-        var blockNumber = bought.blockNumber;
+      let blockNumber = bought.blockNumber;
 
-        var s1,
-          s2,
-          s3 = 0;
+      let s1,
+        s2,
+        s3,
+        amount = 0;
 
-        var amount = 0;
+      if (bought.sellerFee.amount && bought.sellerFee.decimals) {
+        s1 = bought.sellerFee.amount / 10 ** bought.sellerFee.decimals;
+        amount += s1;
+      }
+      if (bought.protocolFee.amount && bought.protocolFee.decimals) {
+        s2 = bought.protocolFee.amount / 10 ** bought.protocolFee.decimals;
+        amount += s2;
+      }
+      if (bought.royaltyFee.amount && bought.royaltyFee.decimals) {
+        s3 = bought.royaltyFee.amount / 10 ** bought.royaltyFee.decimals;
+        amount += s3;
+      }
 
-        if (bought.sellerFee.amount && bought.sellerFee.decimals) {
-          s1 = bought.sellerFee.amount / 10 ** bought.sellerFee.decimals;
+      if (bought.marketplaceFee.amount && bought.marketplaceFee.decimals) {
+        amount +=
+          bought.marketplaceFee.amount / 10 ** bought.marketplaceFee.decimals;
+      }
+
+      if (tokenAddress === "0x0000000000a39bb272e79075ade125fd351887ac") {
+        if (bought.sellerFee.amount) {
+          s1 = bought.sellerFee.amount / 10 ** 18;
           amount += s1;
         }
-        if (bought.protocolFee.amount && bought.protocolFee.decimals) {
-          s2 = bought.protocolFee.amount / 10 ** bought.protocolFee.decimals;
+        if (bought.protocolFee.amount) {
+          s2 = bought.protocolFee.amount / 10 ** 18;
           amount += s2;
         }
-        if (bought.royaltyFee.amount && bought.royaltyFee.decimals) {
-          s3 = bought.royaltyFee.amount / 10 ** bought.royaltyFee.decimals;
+        if (bought.royaltyFee.amount) {
+          s3 = sold.royaltyFee.amount / 10 ** 18;
           amount += s3;
         }
 
-        if (bought.marketplaceFee.amount && bought.marketplaceFee.decimals) {
-          amount +=
-            bought.marketplaceFee.amount / 10 ** bought.marketplaceFee.decimals;
+        if (bought.marketplaceFee.amount) {
+          amount += bought.marketplaceFee.amount / 10 ** 18;
         }
+      }
 
-        if (tokenAddress === "0x0000000000a39bb272e79075ade125fd351887ac") {
-          if (bought.sellerFee.amount) {
-            s1 = bought.sellerFee.amount / 10 ** 18;
-            amount += s1;
-          }
-          if (bought.protocolFee.amount) {
-            s2 = bought.protocolFee.amount / 10 ** 18;
-            amount += s2;
-          }
-          if (bought.royaltyFee.amount) {
-            s3 = sold.royaltyFee.amount / 10 ** 18;
-            amount += s3;
-          }
+      const timestamp = (await alchemy.core.getBlock(parseInt(blockNumber)))
+        .timestamp;
+      return {
+        contract_address: contract_address,
+        tokenId: tokenId,
+        tx_hash: tx_hash,
+        amount: amount,
+        tokensymbol: tokensymbol,
+        blockNumber: blockNumber,
+        tokenAddress: tokenAddress,
+        nftMetadata: nftMetadata.media,
+        floorprice: nftMetadata.contract.openSea.floorPrice,
+        timestamp: timestamp,
+      };
+    });
 
-          if (bought.marketplaceFee.amount) {
-            amount += bought.marketplaceFee.amount / 10 ** 18;
-          }
-        }
+    const results = await Promise.all(promises);
+    BUY.push(...results);
 
-        BUY.push({
-          contract_address: contract_address,
-          tokenId: tokenId,
-          tx_hash: tx_hash,
-          amount: amount,
-          tokensymbol: tokensymbol,
-          blockNumber: blockNumber,
-          tokenAddress: tokenAddress,
-          nftMetadata: nftMetadata.media,
-        });
-      })
-    );
-
-    if (purchases.pageKey === undefined) {
+    if (!purchases.pageKey) {
       break;
     }
+
     f = purchases.pageKey;
   }
 
@@ -314,7 +324,6 @@ export default async function handler(req, res) {
         const SELL = await getSales(wallet, token, alchemy);
         const MINTS = await getMints(wallet, token, alchemy);
         const BUY = await getPurchases(wallet, token, alchemy);
-
         const Analysis = {
           Sales: SELL,
           Mints: MINTS,
@@ -323,11 +332,10 @@ export default async function handler(req, res) {
         res.status(200).json({
           Analysis,
         });
-      } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ error: error.message });
+        break;
+      } catch (err) {
+        console.error(err);
       }
-      break;
     default:
       res.setHeader("Allow", ["GET"]);
       res.status(405).end(`Method ${method} Not Allowed`);
