@@ -25,11 +25,14 @@ async function getPNL(vr) {
               pmatchedContractAddress[purchase.contract_address] = true;
               pmatchedTokenId[purchase.tokenId] = true;
               txs.push({
+                category: "sold",
                 tokenId: tokenId,
                 tx_hash: sale.tx_hash,
                 contract_address: purchase.contract_address,
                 purchase_value: purchase.amount,
                 sell_value: sale.amount,
+                tokensymbol_sale: sale.tokensymbol,
+                tokensymbol_purchase: purchase.tokensymbol,
                 pnl: sale.amount - purchase.amount,
                 sale_timestamp: sale.timestamp,
                 purchase_timestamp: purchase.timestamp,
@@ -46,16 +49,36 @@ async function getPNL(vr) {
               ) {
                 mmatchedContractAddress[mint.contract_address] = true;
                 mmatchedTokenId[mint.tokenId] = true;
-                txs.push({
-                  tokenId: tokenId,
-                  contract_address: sale.contract_address,
-                  tx_hash: sale.tx_hash,
-                  mint_value: mint.value,
-                  sell_value: sale.amount,
-                  pnl: sale.amount - mint.value,
-                  sale_timestamp: sale.timestamp,
-                  mint_timestamp: mint.timestamp,
-                });
+                if (!mint.ERC20.length) {
+                  txs.push({
+                    category: "sold",
+                    tokenId: tokenId,
+                    contract_address: sale.contract_address,
+                    tx_hash: sale.tx_hash,
+                    mint_value: mint.value,
+                    sell_value: sale.amount,
+                    tokensymbol_sale: sale.tokensymbol,
+                    pnl: sale.amount - mint.value,
+                    sale_timestamp: sale.timestamp,
+                    mint_timestamp: mint.timestamp,
+                  });
+                } else {
+                  txs.push({
+                    category: "sold",
+                    tokenId: tokenId,
+                    contract_address: sale.contract_address,
+                    tx_hash: sale.tx_hash,
+                    mint_value: mint.ERC20.map((tk) => tk.value),
+                    tokenlogo: mint.ERC20.map((tk) => tk.logo),
+                    tokensymbol_sale: sale.tokensymbol,
+                    tokensymbol_mint: mint.ERC20.map((tk) => tk.token),
+                    sell_value: sale.amount,
+                    tokensymbol_sale: sale.tokensymbol,
+                    pnl: sale.amount - mint.value,
+                    sale_timestamp: sale.timestamp,
+                    mint_timestamp: mint.timestamp,
+                  });
+                }
               }
             })
           );
@@ -65,10 +88,12 @@ async function getPNL(vr) {
     vr.data.Analysis.Purchases.map((purchase) => {
       if (!pmatchedContractAddress[purchase.contract_address]) {
         txs.push({
+          category: "hold",
           tokenId: purchase.tokenId,
           tx_hash: purchase.tx_hash,
           contract_address: purchase.contract_address,
           purchase_value: purchase.amount,
+          tokensymbol: purchase.tokensymbol,
           purchase_timestamp: purchase.timestamp,
           floorprice: purchase.floorprice,
           unrealised_pnl: purchase.floorprice - purchase.amount,
@@ -76,11 +101,13 @@ async function getPNL(vr) {
       } else {
         if (!pmatchedTokenId[purchase.contract_address]) {
           txs.push({
+            category: "hold",
             tokenId: purchase.tokenId,
             tx_hash: purchase.tx_hash,
             contract_address: purchase.contract_address,
             purchase_value: purchase.amount,
             purchase_timestamp: purchase.timestamp,
+            tokensymbol: purchase.tokensymbol,
             floorprice: purchase.floorprice,
             unrealised_pnl: purchase.floorprice - purchase.amount,
           });
@@ -91,6 +118,7 @@ async function getPNL(vr) {
     vr.data.Analysis.Mints.map((mint) => {
       if (!mmatchedContractAddress[mint.contract_address]) {
         txs.push({
+          category: "hold",
           tokenId: mint.tokenId,
           tx_hash: mint.tx_hash,
           contract_address: mint.contract_address,
@@ -102,6 +130,7 @@ async function getPNL(vr) {
       } else {
         if (!mmatchedTokenId[mint.contract_address]) {
           txs.push({
+            category: "hold",
             tokenId: mint.tokenId,
             tx_hash: mint.tx_hash,
             contract_address: mint.contract_address,
