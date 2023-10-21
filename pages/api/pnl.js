@@ -7,7 +7,6 @@ const config = {
 };
 async function getPNL(vr) {
   var txs = [];
-
   if (vr.data.Analysis.Sales.length) {
     const pmatchedContractAddress = {};
     const pmatchedTokenId = {};
@@ -146,21 +145,5 @@ async function getPNL(vr) {
   return txs;
 }
 
-export default async function handler(req, res) {
-  const { method } = req;
-  const { wallet } = req.query;
-  const { token } = req.query;
+export { getPNL };
 
-  switch (method) {
-    case "GET":
-      const vr = await axios.get(
-        `http://localhost:3000/api/nft?wallet=${wallet}&token=${token}`
-      );
-      const rep = await getPNL(vr);
-      res.status(200).json({ rep });
-      break;
-    default:
-      res.setHeader("Allow", ["GET"]);
-      res.status(405).end(`Method ${method} Not Allowed`);
-  }
-}

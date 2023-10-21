@@ -54,7 +54,6 @@ async function getTotalPNL(vr) {
   });
 
   var mintamountETH = 0;
-  var tokenamount = 0;
   var temp = {};
   vr.data.Analysis.Mints.map((mints) => {
     temp = {};
