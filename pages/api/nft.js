@@ -43,12 +43,6 @@ async function getSales(wallet, token, alchemy) {
           sold.marketplaceFee.tokenAddress;
 
         var blockNumber = sold.blockNumber;
-        // try {
-        //   const block = await alchemy.core.getBlock();
-        //   timestamp = block.timestamp;
-        // } catch (err) {
-        //   console.log("ok");
-        // }
         var s1,
           s2,
           s3 = 0;
