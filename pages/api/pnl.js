@@ -1,10 +1,4 @@
-const { default: axios } = require("axios");
-import { Alchemy, Network } from "alchemy-sdk";
-
-const config = {
-  apiKey: "TMbUqfFKq008ZyBmPSc6gLKw1s-oUQnX",
-  network: Network.ETH_MAINNET,
-};
+import axios from "axios";
 async function getPNL(vr) {
   var txs = [];
   if (vr.data.Analysis.Sales.length) {
@@ -145,5 +139,21 @@ async function getPNL(vr) {
   return txs;
 }
 
-export { getPNL };
+export default async function handler(req, res) {
+  const { method } = req;
+  const { wallet } = req.query;
+  const { token } = req.query;
+  switch (method) {
+    case "GET":
+      const vr = await axios.get(
+        `http://localhost:3001/api/nft?wallet=${wallet}&token=${token}`
+      );
+      const rep = await getPNL(vr);
 
+      res.status(200).json({ rep });
+      break;
+    default:
+      res.setHeader("Allow", ["GET"]);
+      res.status(405).end(`Method ${method} Not Allowed`);
+  }
+}

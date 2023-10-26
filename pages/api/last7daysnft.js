@@ -1,23 +1,23 @@
 import { Alchemy, Network } from "alchemy-sdk";
+import axios from "axios";
 import Bottleneck from "bottleneck";
 const config = {
   apiKey: "thZ6Uov_nnjBegiTs5aXqlqLHHOjEXII",
   network: Network.ETH_MAINNET,
 };
-
 const limiter = new Bottleneck({
   maxConcurrent: 100,
-  minTime: 80,
 });
 
-async function getSales(wallet, token, alchemy) {
+async function getSales(wallet, token, alchemy, fromBlock) {
   const SELL = [];
   while (1) {
     var f;
     const contractAddress = token;
-
+    console.log(fromBlock);
     var sales = await alchemy.nft.getNftSales({
       toBlock: "latest",
+      fromBlock: fromBlock,
       sellerAddress: wallet,
       pageKey: f,
     });
@@ -119,7 +119,7 @@ async function getSales(wallet, token, alchemy) {
   return SELL;
 }
 
-async function getMints(wallet, token, alchemy) {
+async function getMints(wallet, token, alchemy, fromBlock) {
   const MINTS = [];
   var pageKey;
   while (1) {
@@ -206,13 +206,14 @@ async function getMints(wallet, token, alchemy) {
   return MINTS;
 }
 
-async function getPurchases(wallet, token, alchemy) {
+async function getPurchases(wallet, token, alchemy, fromBlock) {
   const BUY = [];
   const contractAddress = token;
   let f;
   while (true) {
     const purchases = await alchemy.nft.getNftSales({
       toBlock: "latest",
+      fromBlock: fromBlock,
       buyerAddress: wallet,
       pageKey: f,
     });
@@ -324,10 +325,39 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       const alchemy = new Alchemy(config);
+
+      const apiKey =
+        "IdM0rE9W5zfBERFNCY5sCwNyYrhtkyYefjBYeT0H1XGLIn6JzJBJeJS5oSnJzRDy";
+      const url = "https://deep-index.moralis.io/api/v2.2/dateToBlock";
+      const chain = "eth";
+      const date = (await alchemy.core.getBlock()).timestamp - 7 * 24 * 60 * 60;
+      const conffig = {
+        headers: {
+          accept: "application/json",
+          "X-API-Key": apiKey,
+        },
+        params: {
+          chain,
+          date,
+        },
+      };
+
+      const fromBlock = ((await axios.get(url, conffig)).data.block);
+
+      // const date = "1667823435";
+
+      // const chain = evm_api.ETHEREUM;
+
+      // const response = await Moralis.EvmApi.block.getDateToBlock({
+      //   date,
+      //   chain,
+      // });
+
+      //console.log(response.toJSON());
       try {
-        const SELL = await getSales(wallet, token, alchemy);
-        const MINTS = await getMints(wallet, token, alchemy);
-        const BUY = await getPurchases(wallet, token, alchemy);
+        const SELL = await getSales(wallet, token, alchemy, fromBlock);
+        const MINTS = await getMints(wallet, token, alchemy, fromBlock);
+        const BUY = await getPurchases(wallet, token, alchemy, fromBlock);
 
         const Analysis = {
           Sales: SELL,
