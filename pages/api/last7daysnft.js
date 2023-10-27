@@ -129,74 +129,82 @@ async function getMints(wallet, token, alchemy, fromBlock) {
       ...(token ? { contractAddresses: [token] } : {}),
     };
 
-    const mints = await limiter.schedule(async () => {
+    const mint = await limiter.schedule(async () => {
       return await alchemy.nft.getMintedNfts(wallet, nftdata);
     });
-    await Promise.all(
-      mints.nfts.map(async (nft) => {
-        const ERC20 = [];
-        try {
-          const txhash = nft.transactionHash;
-          const tx = await alchemy.transact.getTransaction(txhash);
-          const value = parseInt(tx.value._hex, 16) / 10 ** 18;
-          const recpt = await alchemy.core.getTransactionReceipt(txhash);
-          const res = recpt.logs.filter((transaction) => {
-            return transaction.topics.includes(
-              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
-            );
-          });
-
-          await Promise.all(
-            res.map(async (tken) => {
-              if (
-                tken.address.toLowerCase() !==
-                nft.contract.address.toLowerCase()
-              ) {
-                // console.log(tken);
-                const tokenmeta = await alchemy.core.getTokenMetadata(
-                  tken.address
-                );
-                const decimals = tokenmeta.decimals;
-                const logo = tokenmeta.logo;
-                const symbol = tokenmeta.symbol;
-                const value = parseInt(tken.data) / 10 ** decimals;
-                if (value) {
-                  ERC20.push({
-                    symbol: symbol,
-                    logo: logo,
-                    value: value,
-                  });
-                }
-              }
-            })
-          );
-
-          const nftMetadata = await limiter.schedule(async () => {
-            return await alchemy.nft.getNftMetadata(
-              nft.contract.address,
-              nft.tokenId
-            );
-          });
-          const t = parseInt(nft.blockNumber, 16);
-          const timestamp = await limiter.schedule(async () => {
-            return (await alchemy.core.getBlock(t)).timestamp;
-          });
-          MINTS.push({
-            tokenId: nft.tokenId,
-            tx_hash: nft.transactionHash,
-            value: value,
-            ERC20: ERC20,
-            blockNumber: nft.blockNumber,
-            contract_address: nft.contract.address,
-            media: nftMetadata.media,
-            floorprice: nftMetadata.contract.openSea.floorPrice,
-            timestamp: timestamp,
-          });
-        } catch (err) {
-          //console.log(err);
-        }
-      })
+    console.log(fromBlock);
+    const mints = mint.nfts.filter(
+      (min) => parseInt(min.blockNumber) >= fromBlock
     );
+
+    console.log(mints);
+    if (mints.length) {
+      await Promise.all(
+        mints.nfts.map(async (nft) => {
+          const ERC20 = [];
+          try {
+            const txhash = nft.transactionHash;
+            const tx = await alchemy.transact.getTransaction(txhash);
+            const value = parseInt(tx.value._hex, 16) / 10 ** 18;
+            const recpt = await alchemy.core.getTransactionReceipt(txhash);
+            const res = recpt.logs.filter((transaction) => {
+              return transaction.topics.includes(
+                "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+              );
+            });
+
+            await Promise.all(
+              res.map(async (tken) => {
+                if (
+                  tken.address.toLowerCase() !==
+                  nft.contract.address.toLowerCase()
+                ) {
+                  // console.log(tken);
+                  const tokenmeta = await alchemy.core.getTokenMetadata(
+                    tken.address
+                  );
+                  const decimals = tokenmeta.decimals;
+                  const logo = tokenmeta.logo;
+                  const symbol = tokenmeta.symbol;
+                  const value = parseInt(tken.data) / 10 ** decimals;
+                  if (value) {
+                    ERC20.push({
+                      symbol: symbol,
+                      logo: logo,
+                      value: value,
+                    });
+                  }
+                }
+              })
+            );
+
+            const nftMetadata = await limiter.schedule(async () => {
+              return await alchemy.nft.getNftMetadata(
+                nft.contract.address,
+                nft.tokenId
+              );
+            });
+            const t = parseInt(nft.blockNumber, 16);
+            const timestamp = await limiter.schedule(async () => {
+              return (await alchemy.core.getBlock(t)).timestamp;
+            });
+            MINTS.push({
+              tokenId: nft.tokenId,
+              tx_hash: nft.transactionHash,
+              value: value,
+              ERC20: ERC20,
+              blockNumber: nft.blockNumber,
+              contract_address: nft.contract.address,
+              media: nftMetadata.media,
+              floorprice: nftMetadata.contract.openSea.floorPrice,
+              timestamp: timestamp,
+            });
+          } catch (err) {
+            //console.log(err);
+          }
+        })
+      );
+    }
 
     if (mints.pageKey === undefined) {
       break;
@@ -342,7 +350,7 @@ export default async function handler(req, res) {
         },
       };
 
-      const fromBlock = ((await axios.get(url, conffig)).data.block);
+      const fromBlock = (await axios.get(url, conffig)).data.block;
 
       // const date = "1667823435";
 
