@@ -7,7 +7,6 @@ const config = {
 
 const limiter = new Bottleneck({
   maxConcurrent: 100,
-  minTime: 80,
 });
 
 async function getSales(wallet, token, alchemy) {
@@ -27,7 +26,6 @@ async function getSales(wallet, token, alchemy) {
         (nfts) => nfts.contractAddress === contractAddress
       );
     }
-
     Promise.all(
       sales.nftSales.map(async (sold) => {
         const contract_address = sold.contractAddress;
