@@ -1,87 +1,87 @@
+// Import necessary modules
 import axios from "axios";
-import _ from "underscore";
+import { uniq } from "underscore";
+import csvtojson from "csvtojson";
+import fs from "fs/promises";
+import jsonWriter from "fs-json-writer";
+import path from "path";
 
-async function getTotalPNL(vr) {
-  var Tokens = [];
-  vr.data.Analysis.Sales.map((sales) => {
-    if (sales.tokenAddress === "0x0000000000a39bb272e79075ade125fd351887ac") {
-      Tokens.push("BLUR");
-    } else {
-      Tokens.push(sales.tokensymbol);
-    }
+const csvFilePath = "./onchain.csv";
+
+async function getTotalPNL(vr, wallet) {
+  const result = { Address: wallet, SELL: [], PURCHASED: [], MINT: [] };
+
+  processTransactions(vr.data.Analysis.Sales, result.SELL);
+  processTransactions(vr.data.Analysis.Purchases, result.PURCHASED);
+  processMints(vr.data.Analysis.Mints, result.MINT);
+
+  console.log(result);
+  return result;
+}
+
+function processTransactions(transactions, resultArray) {
+  const Tokens = [];
+
+  transactions.forEach((transaction) => {
+    const token =
+      transaction.tokenAddress === "0x0000000000a39bb272e79075ade125fd351887ac"
+        ? "BLUR"
+        : transaction.tokensymbol;
+    Tokens.push(token);
   });
 
-  var tokens = _.uniq(Tokens);
+  const tokens = uniq(Tokens);
 
-  tokens.map((token) => {
-    const tBal = vr.data.Analysis.Sales.filter(
-      (sales) =>
-        sales.tokensymbol === token ||
-        sales.tokenAddress === "0x0000000000a39bb272e79075ade125fd351887ac"
+  tokens.forEach((token) => {
+    const tBal = transactions.filter(
+      (transaction) =>
+        transaction.tokensymbol === token ||
+        transaction.tokenAddress ===
+          "0x0000000000a39bb272e79075ade125fd351887ac"
     );
 
-    var tokenBal = 0;
-    tBal.map((amount) => {
+    let tokenBal = 0;
+    tBal.forEach((amount) => {
       tokenBal += amount.amount;
     });
-    console.log("SELL", token, tokenBal);
-  });
 
-  Tokens = [];
-  vr.data.Analysis.Purchases.map((purchase) => {
-    if (
-      purchase.tokenAddress === "0x0000000000a39bb272e79075ade125fd351887ac"
-    ) {
-      Tokens.push("BlUR");
+    resultArray.push({ token, amount: tokenBal });
+  });
+}
+
+function processMints(mints, resultArray) {
+  let mintamountETH = 0;
+
+  mints.forEach((mint) => {
+    const temp = {};
+
+    if (mint.ERC20.length === 0) {
+      mintamountETH += mint.value;
     } else {
-      Tokens.push(purchase.tokensymbol);
-    }
-  });
+      temp.symbol = mint.ERC20[0].symbol;
+      temp.amount = 0;
 
-  tokens = _.uniq(Tokens);
-
-  tokens.map((token) => {
-    const tBal = vr.data.Analysis.Purchases.filter(
-      (purchase) =>
-        purchase.tokensymbol === token ||
-        purchase.tokenAddress === "0x0000000000a39bb272e79075ade125fd351887ac"
-    );
-    var tokenBal = 0;
-    tBal.map((amount) => {
-      tokenBal += amount.amount;
-    });
-    console.log("PURCHASED", token, tokenBal);
-  });
-
-  var mintamountETH = 0;
-  var temp = {};
-  vr.data.Analysis.Mints.map((mints) => {
-    temp = {};
-    if ((mints.ERC20 = [])) {
-      mintamountETH += mints.value;
-    } else {
-      temp.symbol = mints.ERC20[0].symbol;
-      console.log(mints.ERC20);
-      mints.ERC20.map((tk) => {
+      mint.ERC20.forEach((tk) => {
         temp.amount += tk.value;
       });
+      resultArray.push({ token: temp.symbol, amount: temp.amount });
     }
   });
-  console.log("MINT", "ETH", mintamountETH);
-  console.log("MINT", temp.symbol, temp.amount);
+
+  resultArray.push({ token: "ETH", amount: mintamountETH });
 }
 
 export default async function handler(req, res) {
   const { method } = req;
   const { wallet } = req.query;
   const { token } = req.query;
-
   switch (method) {
     case "GET":
       const vr = await axios.get(
         `http://localhost:3000/api/nft?wallet=${wallet}&token=${token}`
       );
-      getTotalPNL(vr);
+      const result = await getTotalPNL(vr,wallet);
+      res.status(200).json(result);
       break;
     default:
       res.setHeader("Allow", ["GET"]);

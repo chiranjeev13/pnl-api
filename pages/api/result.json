@@ -1,0 +1,1649 @@
+[
+	{
+		"Address": "0xd96e4656f8906b215b2ca71a785ace94e1fa278b",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 49.525951199999966
+			},
+			{
+				"token": "WETH",
+				"amount": 48.649575522869995
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 31.145486165835504
+			},
+			{
+				"token": "WETH",
+				"amount": 25.80939655
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 89.57979999999982
+			}
+		]
+	},
+	{
+		"Address": "0xda668976b6b1569e2f651b18c2a579a040bfb4ce",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 3.839855000000001
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 11.39755
+			}
+		],
+		"MINT": [
+			{
+				"token": "USDT",
+				"amount": 50000
+			},
+			{
+				"token": "USDT",
+				"amount": 50000
+			},
+			{
+				"token": "USDT",
+				"amount": 50000
+			},
+			{
+				"token": "USDT",
+				"amount": 50000
+			},
+			{
+				"token": "USDT",
+				"amount": 50000
+			},
+			{
+				"token": "USDT",
+				"amount": 50000
+			},
+			{
+				"token": "USDT",
+				"amount": 50000
+			},
+			{
+				"token": "USDT",
+				"amount": 50000
+			},
+			{
+				"token": "USDT",
+				"amount": 50000
+			},
+			{
+				"token": "USDT",
+				"amount": 50000
+			},
+			{
+				"token": "USDT",
+				"amount": 10000
+			},
+			{
+				"token": "ETH",
+				"amount": 0.5
+			}
+		]
+	},
+	{
+		"Address": "0xdb7ad4166d0a840c36b03ab4c81ffaf35a9a6edd",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 0.27213750000000003
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 1.6652700000000003
+			},
+			{
+				"token": "WETH",
+				"amount": 1.64725
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0
+			}
+		]
+	},
+	{
+		"Address": "0xddaf5b5d25de5c62ba82ee6fa2597fade98d1476",
+		"SELL": [
+			{
+				"token": "WETH",
+				"amount": 6.0566565
+			},
+			{
+				"token": "ETH",
+				"amount": 8.22651
+			},
+			{
+				"token": "BLUR",
+				"amount": 3.0600000000000005
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 16.001628647500002
+			},
+			{
+				"token": "WETH",
+				"amount": 1.06104375
+			},
+			{
+				"token": "BLUR",
+				"amount": 0.27
+			}
+		],
+		"MINT": [
+			{
+				"token": "RUG",
+				"amount": 1380
+			},
+			{
+				"token": "RUG",
+				"amount": 1380
+			},
+			{
+				"token": "ETH",
+				"amount": 12.242620000000006
+			}
+		]
+	},
+	{
+		"Address": "0xdeb12b2e285c3331e73ff5a3f08d7d81c9042a7f",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 1.7491625
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 1.155461225
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 2.518074946080001
+			}
+		]
+	},
+	{
+		"Address": "0xdf033a5587a6631b2fd5a285dea4d8c3aac658b6",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 10.8728545
+			},
+			{
+				"token": "WETH",
+				"amount": 3.2260118096000006
+			},
+			{
+				"token": "BLUR",
+				"amount": 0.7899999999999999
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 6.047729499999998
+			},
+			{
+				"token": "WETH",
+				"amount": 9.215205100000002
+			},
+			{
+				"token": "BLUR",
+				"amount": 0.27
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 6.845
+			}
+		]
+	},
+	{
+		"Address": "0xe142f1a7cf46f29dea52418cf61a421fe995c7a1",
+		"SELL": [
+			
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 2.9957675
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 2.353699999999999
+			}
+		]
+	},
+	{
+		"Address": "0xe421e19c69ffaebe5f1548fdba81d4b4ad98688e",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 9.933599199999993
+			},
+			{
+				"token": "WETH",
+				"amount": 1.50999145
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 32.40639580209192
+			},
+			{
+				"token": "WETH",
+				"amount": 0.603545
+			}
+		],
+		"MINT": [
+			{
+				"token": "SHRM",
+				"amount": 6669
+			},
+			{
+				"token": "SHRM",
+				"amount": 99999.99999999999
+			},
+			{
+				"token": "ETH",
+				"amount": 11.456000000000003
+			}
+		]
+	},
+	{
+		"Address": "0xe568ca143592df06a7eabfd4d9d563f1289dc607",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 74.156585
+			},
+			{
+				"token": "WETH",
+				"amount": 11.284881451
+			},
+			{
+				"token": "BLUR",
+				"amount": 3.3
+			},
+			{
+				"amount": 3.3
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 79.66720124899503
+			},
+			{
+				"token": "WETH",
+				"amount": 9.267724000000001
+			},
+			{
+				"token": "BLUR",
+				"amount": 1.8400000000000003
+			}
+		],
+		"MINT": [
+			{
+				"token": "APE",
+				"amount": 610
+			},
+			{
+				"token": "APE",
+				"amount": 610
+			},
+			{
+				"token": "RUG",
+				"amount": 1380
+			},
+			{
+				"token": "RUG",
+				"amount": 1380
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "APE",
+				"amount": 2500
+			},
+			{
+				"token": "ETH",
+				"amount": 82.46547000000008
+			}
+		]
+	},
+	{
+		"Address": "0xe57b6cab1239f53e50e158a294cd370c36c383ae",
+		"SELL": [
+			{
+				"token": "BLUR",
+				"amount": 22.750000000000007
+			},
+			{
+				"token": "WETH",
+				"amount": 23.31064055000001
+			},
+			{
+				"token": "ETH",
+				"amount": 50.453978000000035
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 50.096649522828855
+			},
+			{
+				"token": "BLUR",
+				"amount": 9.05
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 1.1480928888888893
+			}
+		]
+	},
+	{
+		"Address": "0xe6c0e7f2a5c1a92c7ce602d83a4bc0e851723e3c",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 92.83101600000008
+			},
+			{
+				"token": "WETH",
+				"amount": 4.725829999999999
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 1.80546625
+			},
+			{
+				"token": "WETH",
+				"amount": 97.23027080250013
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0.008
+			}
+		]
+	},
+	{
+		"Address": "0xe6d1e6b17f7f29dcc60abe34031f6e55dba940ad",
+		"SELL": [
+			{
+				"token": "WETH",
+				"amount": 4.971804327500001
+			},
+			{
+				"token": "ETH",
+				"amount": 10.40626875
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "WETH",
+				"amount": 9.632111500000002
+			},
+			{
+				"token": "ETH",
+				"amount": 19.80015478392684
+			},
+			{
+				"token": "BLUR",
+				"amount": 0.05
+			}
+		],
+		"MINT": [
+			{
+				"token": "KRUN",
+				"amount": 405
+			},
+			{
+				"token": "KRUN",
+				"amount": 405
+			},
+			{
+				"token": "ETH",
+				"amount": 2.554700000000001
+			}
+		]
+	},
+	{
+		"Address": "0xe749202de664976e48652902ec3e8e0d26397ea5",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 0.23575000000000002
+			},
+			{
+				"token": "WETH",
+				"amount": 5.950799999999999
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 6.741803190000005
+			}
+		],
+		"MINT": [
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "LOVE",
+				"amount": 4800
+			},
+			{
+				"token": "ETH",
+				"amount": 18.758351577884085
+			}
+		]
+	},
+	{
+		"Address": "0xe8a3b6329024cef457c3f48a83c2eb09708a7e72",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 6.54868625
+			},
+			{
+				"token": "WETH",
+				"amount": 27.765215599999994
+			},
+			{
+				"token": "BLUR",
+				"amount": 1.01
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 18.998316584999998
+			},
+			{
+				"token": "WETH",
+				"amount": 13.1377145
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 3.8775000000000004
+			}
+		]
+	},
+	{
+		"Address": "0xea6895e02c5ba23ae31a44831ac15b925f05f1a5",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 3.0021424999999997
+			},
+			{
+				"token": "BLUR",
+				"amount": 0.36
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 6.416555665
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0
+			}
+		]
+	},
+	{
+		"Address": "0xea7f3b212b972708f526662271d5a5ec7630e4ca",
+		"SELL": [
+			
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 0.5494
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0
+			}
+		]
+	},
+	{
+		"Address": "0xec8affbeb77065b4a2a65fd586cf08c5e5fe7b39",
+		"SELL": [
+			
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 2.087348440000001
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0
+			}
+		]
+	},
+	{
+		"Address": "0xece0e997105c0908fac90384d12cef028ac472f2",
+		"SELL": [
+			
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 2.0175
+			},
+			{
+				"token": "BLUR",
+				"amount": 0.51
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0
+			}
+		]
+	},
+	{
+		"Address": "0xed1c1e3c8e65ed283a5d6d984136b915b37c3053",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 14.089624499999942
+			},
+			{
+				"token": "WETH",
+				"amount": 23.025458679440014
+			},
+			{
+				"token": "BLUR",
+				"amount": 0.37000000000000005
+			},
+			{
+				"token": "USDC",
+				"amount": 52.87
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 77.47798968816632
+			},
+			{
+				"token": "WETH",
+				"amount": 1.5641485
+			}
+		],
+		"MINT": [
+			{
+				"token": "BOOP",
+				"amount": 10000
+			},
+			{
+				"token": "BOOP",
+				"amount": 4000
+			},
+			{
+				"token": "BOOP",
+				"amount": 8000
+			},
+			{
+				"token": "BOOP",
+				"amount": 8000
+			},
+			{
+				"token": "BOOP",
+				"amount": 12000
+			},
+			{
+				"token": "BOOP",
+				"amount": 12000
+			},
+			{
+				"token": "BOOP",
+				"amount": 12000
+			},
+			{
+				"token": "BOOP",
+				"amount": 8000
+			},
+			{
+				"token": "BOOP",
+				"amount": 8000
+			},
+			{
+				"token": "BOOP",
+				"amount": 4000
+			},
+			{
+				"token": "BOOP",
+				"amount": 1000
+			},
+			{
+				"token": "BOOP",
+				"amount": 1000
+			},
+			{
+				"token": "BOOP",
+				"amount": 1000
+			},
+			{
+				"token": "BOOP",
+				"amount": 1000
+			},
+			{
+				"token": "BOOP",
+				"amount": 1000
+			},
+			{
+				"token": "BOOP",
+				"amount": 1000
+			},
+			{
+				"token": "BOOP",
+				"amount": 1000
+			},
+			{
+				"token": "BOOP",
+				"amount": 1000
+			},
+			{
+				"token": "BOOP",
+				"amount": 2000
+			},
+			{
+				"token": "BOOP",
+				"amount": 2000
+			},
+			{
+				"token": "BOOP",
+				"amount": 2000
+			},
+			{
+				"token": "BOOP",
+				"amount": 2000
+			},
+			{
+				"token": "BOOP",
+				"amount": 4000
+			},
+			{
+				"token": "BOOP",
+				"amount": 4000
+			},
+			{
+				"token": "BOOP",
+				"amount": 4000
+			},
+			{
+				"token": "BOOP",
+				"amount": 4000
+			},
+			{
+				"token": "BOOP",
+				"amount": 4000
+			},
+			{
+				"token": "BOOP",
+				"amount": 4000
+			},
+			{
+				"token": "BOOP",
+				"amount": 4000
+			},
+			{
+				"token": "BOOP",
+				"amount": 4000
+			},
+			{
+				"token": "BOOP",
+				"amount": 3000
+			},
+			{
+				"token": "BOOP",
+				"amount": 3000
+			},
+			{
+				"token": "BOOP",
+				"amount": 3000
+			},
+			{
+				"token": "BOOP",
+				"amount": 3000
+			},
+			{
+				"token": "BOOP",
+				"amount": 3000
+			},
+			{
+				"token": "BOOP",
+				"amount": 3000
+			},
+			{
+				"token": "BOOP",
+				"amount": 2000
+			},
+			{
+				"token": "BOOP",
+				"amount": 2000
+			},
+			{
+				"token": "BOOP",
+				"amount": 2000
+			},
+			{
+				"token": "BOOP",
+				"amount": 2000
+			},
+			{
+				"token": "ETH",
+				"amount": 119.99799999999998
+			}
+		]
+	},
+	{
+		"Address": "0xed2aa1e026d51650a770a42b21f605ad09a5d1fb",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 5.410872500000002
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 11.862071320872491
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 4.326
+			}
+		]
+	},
+	{
+		"Address": "0xed9a4690312b1fae099cbbcb2e37234b672f58c0",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 23.515489539999983
+			},
+			{
+				"token": "WETH",
+				"amount": 11.01806175
+			},
+			{
+				"token": "BLUR",
+				"amount": 8.14
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 21.725441223974993
+			},
+			{
+				"token": "WETH",
+				"amount": 2.2215500000000006
+			}
+		],
+		"MINT": [
+			{
+				"token": "STAR",
+				"amount": 1000
+			},
+			{
+				"token": "STAR",
+				"amount": 125
+			},
+			{
+				"token": "ETH",
+				"amount": 5.855437000000002
+			}
+		]
+	},
+	{
+		"Address": "0xef8e462b74b1fb5d11d3e5274e1c65975c86fd69",
+		"SELL": [
+			
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 21.9297475
+			},
+			{
+				"token": "WETH",
+				"amount": 2.3
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0
+			}
+		]
+	},
+	{
+		"Address": "0xf12f50a7b39b949c9c55cef37c642f8604644e31",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 3.151099999999999
+			},
+			{
+				"token": "WETH",
+				"amount": 0.7835000000000001
+			},
+			{
+				"token": "BLUR",
+				"amount": 0.7100000000000001
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 11.612225
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0.15
+			}
+		]
+	},
+	{
+		"Address": "0xf1ea69d36a86350910b0d58dc9fe7825dc5e3abc",
+		"SELL": [
+			
+		],
+		"PURCHASED": [
+			
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0
+			}
+		]
+	},
+	{
+		"Address": "0xf2eadba9d834ececa12b618ff6ac68f4aee805e0",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 42.63346647999999
+			},
+			{
+				"token": "WETH",
+				"amount": 13.168174549999998
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 15.083295627499991
+			},
+			{
+				"token": "WETH",
+				"amount": 51.70656970000001
+			},
+			{
+				"token": "BLUR",
+				"amount": 1.4400000000000002
+			},
+			{
+				"amount": 1.4400000000000002
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0
+			}
+		]
+	},
+	{
+		"Address": "0xf3098ed2e0fc0433b5581d0a93be3c5916fe41b2",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 0.8605999999999999
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 22.447678488724996
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 3.933258830928736
+			}
+		]
+	},
+	{
+		"Address": "0xf33f6c5302fee8dcaf6363f6862071092b3d56b0",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 33.3296505
+			},
+			{
+				"token": "WETH",
+				"amount": 11.377280500000001
+			},
+			{
+				"token": "BLUR",
+				"amount": 7.069999999999999
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "WETH",
+				"amount": 14.444424999999999
+			},
+			{
+				"token": "ETH",
+				"amount": 12.419734434949998
+			},
+			{
+				"token": "BLUR",
+				"amount": 8.22
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 8.946753119999986
+			}
+		]
+	},
+	{
+		"Address": "0xf35f0571b1f74a905274af31cf685e4d9b0fd27b",
+		"SELL": [
+			
+		],
+		"PURCHASED": [
+			
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0
+			}
+		]
+	},
+	{
+		"Address": "0xf3aff73ab09c716dd1540c0896f43e43389332cf",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 0.48585
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 1.88556095
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 1.9875399999999996
+			}
+		]
+	},
+	{
+		"Address": "0xf4032a7073229b20339dceeb3879e310d7764cb9",
+		"SELL": [
+			
+		],
+		"PURCHASED": [
+			
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0
+			}
+		]
+	},
+	{
+		"Address": "0xf4bc5af9da110955a2acc9da850ca0161cb292b8",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 10.720868499999998
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 9.388330173975008
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0.316
+			}
+		]
+	},
+	{
+		"Address": "0xf8e1e9a893b061d1df74058fa206b32c435f7351",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 2.46577
+			},
+			{
+				"token": "WETH",
+				"amount": 2.9902200000000003
+			},
+			{
+				"token": "BLUR",
+				"amount": 0.9
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 8.372590226070006
+			},
+			{
+				"token": "WETH",
+				"amount": 0.43299999999999994
+			},
+			{
+				"token": "BLUR",
+				"amount": 0.18
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0.48
+			}
+		]
+	},
+	{
+		"Address": "0xf98c84089e53048ca3f33bf9a155b7da0049bbe9",
+		"SELL": [
+			
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 86.69539927249897
+			},
+			{
+				"token": "WETH",
+				"amount": 0.25625
+			}
+		],
+		"MINT": [
+			{
+				"token": "JUNGLE",
+				"amount": 4500
+			},
+			{
+				"token": "JUNGLE",
+				"amount": 4500
+			},
+			{
+				"token": "JUNGLE",
+				"amount": 1500
+			},
+			{
+				"token": "JUNGLE",
+				"amount": 1500
+			},
+			{
+				"token": "JUNGLE",
+				"amount": 1500
+			},
+			{
+				"token": "JUNGLE",
+				"amount": 1500
+			},
+			{
+				"token": "JUNGLE",
+				"amount": 1500
+			},
+			{
+				"token": "JUNGLE",
+				"amount": 1500
+			},
+			{
+				"token": "JUNGLE",
+				"amount": 1500
+			},
+			{
+				"token": "JUNGLE",
+				"amount": 1500
+			},
+			{
+				"token": "JUNGLE",
+				"amount": 1500
+			},
+			{
+				"token": "JUNGLE",
+				"amount": 1500
+			},
+			{
+				"token": "JUNGLE",
+				"amount": 1500
+			},
+			{
+				"token": "JUNGLE",
+				"amount": 750
+			},
+			{
+				"token": "JUNGLE",
+				"amount": 750
+			},
+			{
+				"token": "STAR",
+				"amount": 1000
+			},
+			{
+				"token": "ETH",
+				"amount": 16.175090000000015
+			}
+		]
+	},
+	{
+		"Address": "0xfa64fe1b910f1368d4bbf32a8287b99d7b681098",
+		"SELL": [
+			{
+				"token": "WETH",
+				"amount": 4.4552025
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "WETH",
+				"amount": 1.9250875
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0
+			}
+		]
+	},
+	{
+		"Address": "0xfb8a584ac0a8c752be72d1bcc189868d23dbcbe5",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 3.8129060000000004
+			},
+			{
+				"token": "WETH",
+				"amount": 0.6002705
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 4.115615000000002
+			},
+			{
+				"token": "WETH",
+				"amount": 1.17336
+			}
+		],
+		"MINT": [
+			{
+				"token": "WRLD",
+				"amount": 800
+			},
+			{
+				"token": "WRLD",
+				"amount": 800
+			},
+			{
+				"token": "WRLD",
+				"amount": 999
+			},
+			{
+				"token": "WRLD",
+				"amount": 999
+			},
+			{
+				"token": "WRLD",
+				"amount": 999
+			},
+			{
+				"token": "WRLD",
+				"amount": 1998
+			},
+			{
+				"token": "WRLD",
+				"amount": 1998
+			},
+			{
+				"token": "WRLD",
+				"amount": 1111
+			},
+			{
+				"token": "WRLD",
+				"amount": 500
+			},
+			{
+				"token": "WRLD",
+				"amount": 4500
+			},
+			{
+				"token": "WRLD",
+				"amount": 4500
+			},
+			{
+				"token": "WRLD",
+				"amount": 4500
+			},
+			{
+				"token": "WRLD",
+				"amount": 3000
+			},
+			{
+				"token": "WRLD",
+				"amount": 3000
+			},
+			{
+				"token": "ETH",
+				"amount": 7.3199999999999985
+			}
+		]
+	},
+	{
+		"Address": "0xfba60e7e69898d378145f2b8eb484344c696f80f",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 3.3722499999999997
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 2.677505
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0
+			}
+		]
+	},
+	{
+		"Address": "0xfd5350f60cbda208485c0a7e9769bfbba05df9ae",
+		"SELL": [
+			
+		],
+		"PURCHASED": [
+			
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0
+			}
+		]
+	},
+	{
+		"Address": "0xfe0f9ff558b26e1b5d4e4edbac621947c3673d8a",
+		"SELL": [
+			{
+				"token": "ETH",
+				"amount": 0.9486195
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "WETH",
+				"amount": 3.984444999999999
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0
+			}
+		]
+	},
+	{
+		"Address": "0xff413de078ddfd744706f13c605180303ec1fcee",
+		"SELL": [
+			{
+				"token": "WETH",
+				"amount": 0.4426387500000001
+			}
+		],
+		"PURCHASED": [
+			{
+				"token": "ETH",
+				"amount": 0.10957249999999999
+			}
+		],
+		"MINT": [
+			{
+				"token": "ETH",
+				"amount": 0.30000000000000004
+			}
+		]
+	}
+]

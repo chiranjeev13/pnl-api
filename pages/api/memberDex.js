@@ -10,28 +10,32 @@ const alchemy = new Alchemy(config);
 
 var pageKey;
 
-const addresses = [];
+var addresses = [];
 const json_addresses = [];
 
 (async () => {
+  var options = {
+    pageKey: undefined,
+  };
   while (1) {
-    const data = await alchemy.core.getAssetTransfers({
-      fromBlock: "0x0",
-      fromAddress: "0xf896527c49b44aAb3Cf22aE356Fa3AF8E331F280",
-      category: ["external", "internal", "erc20", "erc721", "erc1155"],
-      pageKey: pageKey,
+    const data = await alchemy.nft.getOwnersForContract(
+      "0x1dC454EE1Fd63F3D792aEee9D331c05D9C62B20A",
+      options
+    );
+
+    options.pageKey = data.pageKey;
+    data.owners.map((p) => {
+      addresses.push(p);
     });
+
     if (data.pageKey === undefined) {
       break;
     }
-    pageKey = data.pageKey;
-    data.transfers.map((dt) => {
-      addresses.push(dt.from);
-      addresses.push(dt.to);
-    });
   }
 
   const data = _.uniq(addresses);
+
+  console.log(data);
 
   data.map((t) => {
     json_addresses.push({
@@ -41,7 +45,7 @@ const json_addresses = [];
 
   const csvData = csv.json2csv(json_addresses);
   try {
-    fs.writeFileSync("NFTfi2.csv", csvData, "utf-8");
+    fs.writeFileSync("onchain.csv", csvData, "utf-8");
   } catch (err) {
     console.log(err);
   }

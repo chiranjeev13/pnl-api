@@ -1,4 +1,3 @@
-import axios from "axios";
 import csv from "csv-parser";
 import js2csv from "json-2-csv";
 
@@ -11,7 +10,8 @@ const config = {
 };
 
 const results = [];
-const json_addresses = [];
+const NAMES = [];
+var p = {};
 
 fs.createReadStream("merged.csv")
   .pipe(csv())
@@ -20,8 +20,8 @@ fs.createReadStream("merged.csv")
     main();
   });
 
+var t = [];
 async function test(address, alchemy) {
-  const contractNames = [];
   try {
     let pageKey = undefined;
     while (true) {
@@ -32,14 +32,23 @@ async function test(address, alchemy) {
       pageKey = data.pageKey;
       const res = data.contracts;
 
-      res.map((r) => {
-        contractNames.push(r.name);
+      res.forEach((r) => {
+        const existingEntry = NAMES.find((entry) => entry.name === r.name);
+        if (existingEntry) {
+          if (!existingEntry.addresses.includes(address)) {
+            existingEntry.addresses.push(address);
+          }
+        } else {
+          NAMES.push({ name: r.name, addresses: [address] });
+        }
       });
+
       if (!pageKey) {
         break;
       }
+      t = [];
     }
-    return contractNames;
+    return NAMES;
   } catch (error) {
     console.error("Error fetching data:", error);
     return [];
@@ -48,21 +57,27 @@ async function test(address, alchemy) {
 
 async function main() {
   const alchemy = new Alchemy(config);
-
+  var contractNames;
   for (let i = 0; i < results.length; i++) {
     const addr = results[i].addresses;
     console.log("At wallet", addr, "index", i + 1);
-    const contractNames = await test(addr, alchemy);
-    json_addresses.push({
-      address: addr,
-      contractNames: contractNames.toString(),
-    });
+    contractNames = await test(addr, alchemy);
+  }
 
-    const csvData = js2csv.json2csv(json_addresses);
-    try {
-      fs.writeFileSync("holdings.csv", csvData, "utf-8");
-    } catch (err) {
-      console.log(err);
-    }
+  var a = [];
+  for (const contract of contractNames) {
+    a.push({
+      name: contract.name,
+      addresses: contract.addresses.toString(),
+      length: contract.addresses.length,
+    });
+  }
+  console.log(a);
+
+  const csvData = js2csv.json2csv(a);
+  try {
+    fs.writeFileSync("test.csv", csvData, "utf-8");
+  } catch (err) {
+    console.log(err);
   }
 }
