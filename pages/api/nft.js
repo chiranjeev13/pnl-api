@@ -7,15 +7,13 @@ const config = {
 
 async function getSales(wallet, token, alchemy) {
   const SELL = [];
-  let pageKey;
-
-  const contractAddress = token;
-
-  do {
-    const sales = await alchemy.nft.getNftSales({
+  while (1) {
+    var f;
+    const contractAddress = token;
+    var sales = await alchemy.nft.getNftSales({
       toBlock: "latest",
       sellerAddress: wallet,
-      pageKey: pageKey,
+      pageKey: f,
     });
 
     if (contractAddress) {
@@ -24,7 +22,7 @@ async function getSales(wallet, token, alchemy) {
       );
     }
 
-    sales.nftSales.forEach(async (sold) => {
+    for (const sold of sales.nftSales) {
       const contract_address = sold.contractAddress;
       const tokenId = sold.tokenId;
       const nftMetadata = await alchemy.nft.getNftMetadata(
@@ -48,6 +46,7 @@ async function getSales(wallet, token, alchemy) {
       var s1,
         s2,
         s3 = 0;
+
       var amount = 0;
 
       if (sold.sellerFee.amount && sold.sellerFee.decimals) {
@@ -101,20 +100,20 @@ async function getSales(wallet, token, alchemy) {
         timestamp: timestamp,
         floorprice: nftMetadata.contract.openSea.floorPrice,
       });
-    });
+    }
 
-    pageKey = sales.pageKey;
-  } while (pageKey !== undefined);
-
+    if (sales.pageKey === undefined) {
+      break;
+    }
+    f = sales.pageKey;
+  }
   return SELL;
 }
 
-// Replace the while loop in getMints function with forEach
 async function getMints(wallet, token, alchemy) {
   const MINTS = [];
-  let pageKey;
-
-  do {
+  var pageKey;
+  while (1) {
     const nftdata = {
       tokenType: ["ERC721", "ERC1155"],
       pageKey: pageKey,
@@ -123,9 +122,8 @@ async function getMints(wallet, token, alchemy) {
 
     const mints = await alchemy.nft.getMintedNfts(wallet, nftdata);
 
-    mints.nfts.forEach(async (nft) => {
+    for (const nft of mints.nfts) {
       const ERC20 = [];
-
       try {
         const txhash = nft.transactionHash;
         const tx = await alchemy.transact.getTransaction(txhash);
@@ -137,10 +135,11 @@ async function getMints(wallet, token, alchemy) {
           );
         });
 
-        res.forEach(async (tken) => {
+        for (const tken of res) {
           if (
             tken.address.toLowerCase() !== nft.contract.address.toLowerCase()
           ) {
+            // console.log(tken);
             const tokenmeta = await alchemy.core.getTokenMetadata(tken.address);
             const decimals = tokenmeta.decimals;
             const logo = tokenmeta.logo;
@@ -154,7 +153,7 @@ async function getMints(wallet, token, alchemy) {
               });
             }
           }
-        });
+        }
 
         const nftMetadata = await alchemy.nft.getNftMetadata(
           nft.contract.address,
@@ -176,25 +175,25 @@ async function getMints(wallet, token, alchemy) {
       } catch (err) {
         //console.log(err);
       }
-    });
+    }
 
+    if (mints.pageKey === undefined) {
+      break;
+    }
     pageKey = mints.pageKey;
-  } while (pageKey !== undefined);
-
+  }
   return MINTS;
 }
 
-// Replace the while loop in getPurchases function with forEach
 async function getPurchases(wallet, token, alchemy) {
   const BUY = [];
   const contractAddress = token;
-  let pageKey;
-
-  do {
+  let f;
+  while (true) {
     const purchases = await alchemy.nft.getNftSales({
       toBlock: "latest",
       buyerAddress: wallet,
-      pageKey: pageKey,
+      pageKey: f,
     });
 
     if (contractAddress) {
@@ -203,7 +202,7 @@ async function getPurchases(wallet, token, alchemy) {
       );
     }
 
-    purchases.nftSales.forEach(async (bought) => {
+    for (const bought of purchases.nftSales) {
       const contract_address = bought.contractAddress;
       const tokenId = bought.tokenId;
 
@@ -282,10 +281,14 @@ async function getPurchases(wallet, token, alchemy) {
         floorprice: nftMetadata.contract.openSea.floorPrice,
         timestamp: timestamp,
       });
-    });
+    }
 
-    pageKey = purchases.pageKey;
-  } while (pageKey !== undefined);
+    if (!purchases.pageKey) {
+      break;
+    }
+
+    f = purchases.pageKey;
+  }
 
   return BUY;
 }
@@ -315,7 +318,6 @@ export default async function handler(req, res) {
         break;
       } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Internal Server Error" });
       }
 
     default:
