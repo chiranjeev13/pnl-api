@@ -1,5 +1,4 @@
 import { Alchemy, Network } from "alchemy-sdk";
-import Bottleneck from "bottleneck";
 const config = {
   apiKey: "thZ6Uov_nnjBegiTs5aXqlqLHHOjEXII",
   network: Network.ETH_MAINNET,
@@ -22,16 +21,12 @@ async function getSales(wallet, token, alchemy) {
         (nfts) => nfts.contractAddress === contractAddress
       );
     }
+
     Promise.all(
       sales.nftSales.map(async (sold) => {
         const contract_address = sold.contractAddress;
         const tokenId = sold.tokenId;
-
-        const nftMetadata = await alchemy.nft.getNftMetadata(
-          contract_address,
-          tokenId
-        );
-
+        const marketplace = sold.marketplace;
         const tx_hash = sold.transactionHash;
         const tokensymbol =
           sold.sellerFee.symbol ||
@@ -89,9 +84,6 @@ async function getSales(wallet, token, alchemy) {
           }
         }
 
-        const timestamp = await alchemy.core.getBlock(parseInt(blockNumber))
-          .timestamp;
-
         SELL.push({
           contract_address: contract_address,
           tokenId: tokenId,
@@ -100,9 +92,7 @@ async function getSales(wallet, token, alchemy) {
           tokensymbol: tokensymbol,
           blockNumber: blockNumber,
           tokenAddress: tokenAddress,
-          media: nftMetadata.media,
-          timestamp: timestamp,
-          floorprice: nftMetadata.contract.openSea.floorPrice,
+          marketplace: marketplace,
         });
       })
     );
@@ -165,12 +155,7 @@ async function getMints(wallet, token, alchemy) {
             })
           );
 
-          const nftMetadata = await alchemy.nft.getNftMetadata(
-            nft.contract.address,
-            nft.tokenId
-          );
           const t = parseInt(nft.blockNumber, 16);
-          const timestamp = await alchemy.core.getBlock(t).timestamp;
           MINTS.push({
             tokenId: nft.tokenId,
             tx_hash: nft.transactionHash,
@@ -178,9 +163,6 @@ async function getMints(wallet, token, alchemy) {
             ERC20: ERC20,
             blockNumber: nft.blockNumber,
             contract_address: nft.contract.address,
-            media: nftMetadata.media,
-            floorprice: nftMetadata.contract.openSea.floorPrice,
-            timestamp: timestamp,
           });
         } catch (err) {
           //console.log(err);
@@ -216,10 +198,6 @@ async function getPurchases(wallet, token, alchemy) {
     const promises = purchases.nftSales.map(async (bought) => {
       const contract_address = bought.contractAddress;
       const tokenId = bought.tokenId;
-      const nftMetadata = await alchemy.nft.getNftMetadata(
-        contract_address,
-        tokenId
-      );
       const tx_hash = bought.transactionHash;
       const tokensymbol =
         bought.sellerFee.symbol ||
@@ -277,8 +255,6 @@ async function getPurchases(wallet, token, alchemy) {
         }
       }
 
-      const timestamp = await alchemy.core.getBlock(parseInt(blockNumber))
-        .timestamp;
       return {
         contract_address: contract_address,
         tokenId: tokenId,
@@ -287,9 +263,6 @@ async function getPurchases(wallet, token, alchemy) {
         tokensymbol: tokensymbol,
         blockNumber: blockNumber,
         tokenAddress: tokenAddress,
-        nftMetadata: nftMetadata.media,
-        floorprice: nftMetadata.contract.openSea.floorPrice,
-        timestamp: timestamp,
       };
     });
 
@@ -319,7 +292,10 @@ export default async function handler(req, res) {
         const MINTS = await getMints(wallet, token, alchemy);
         const BUY = await getPurchases(wallet, token, alchemy);
 
+        const meta = await alchemy.nft.getContractMetadata(token);
+
         const Analysis = {
+          meta: meta,
           Sales: SELL,
           Mints: MINTS,
           Purchases: BUY,

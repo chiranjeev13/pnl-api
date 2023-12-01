@@ -6,7 +6,6 @@ import fs from "fs/promises";
 import jsonWriter from "fs-json-writer";
 import path from "path";
 
-const csvFilePath = "./onchain.csv";
 
 async function getTotalPNL(vr, wallet) {
   const result = { Address: wallet, SELL: [], PURCHASED: [], MINT: [] };
@@ -78,7 +77,7 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       const vr = await axios.get(
-        `https://pnl-api.vercel.app/api/nft?wallet=${wallet}&token=${token}`
+        `http://localhost:3000/api/nft?wallet=${wallet}&token=${token}`
       );
       const result = await getTotalPNL(vr, wallet);
       res.status(200).json(result);
