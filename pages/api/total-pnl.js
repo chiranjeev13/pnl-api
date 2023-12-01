@@ -6,7 +6,6 @@ import fs from "fs/promises";
 import jsonWriter from "fs-json-writer";
 import path from "path";
 
-
 async function getTotalPNL(vr, wallet) {
   const result = { Address: wallet, SELL: [], PURCHASED: [], MINT: [] };
 
@@ -80,6 +79,7 @@ export default async function handler(req, res) {
         `http://localhost:3000/api/nft1?wallet=${wallet}&token=${token}`
       );
       const result = await getTotalPNL(vr, wallet);
+      result.meta = vr.data.Analysis.meta;
       res.status(200).json(result);
       break;
     default:
