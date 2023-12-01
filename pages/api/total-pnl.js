@@ -77,7 +77,7 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       const vr = await axios.get(
-        `http://localhost:3000/api/nft?wallet=${wallet}&token=${token}`
+        `http://localhost:3000/api/nft1?wallet=${wallet}&token=${token}`
       );
       const result = await getTotalPNL(vr, wallet);
       res.status(200).json(result);
