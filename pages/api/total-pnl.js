@@ -76,7 +76,7 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       const vr = await axios.get(
-        `https://pnl-api.vercel.app/api/nft1?wallet=${wallet}&token=${token}`
+        `https://pnl-api-rust.vercel.app/api/nft1?wallet=${wallet}&token=${token}`
       );
       const result = await getTotalPNL(vr, wallet);
       result.meta = vr.data.Analysis.meta;
