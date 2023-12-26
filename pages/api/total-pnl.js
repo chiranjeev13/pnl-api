@@ -16,7 +16,9 @@ async function getTotalPNL(vr, wallet) {
 function processTransactions(transactions, resultArray) {
   const Tokens = [];
 
-  const transactions = uniq(transactions, false, (tx) => tx.tx_hash);
+  const items = transactions.length;
+
+  transactions = uniq(transactions, false, (tx) => tx.tx_hash);
 
   transactions.forEach((transaction) => {
     const token =
@@ -41,12 +43,13 @@ function processTransactions(transactions, resultArray) {
       tokenBal += amount.amount;
     });
 
-    resultArray.push({ token, amount: tokenBal });
+    resultArray.push({ token, amount: tokenBal, items: items });
   });
 }
 
 function processMints(mints, resultArray) {
   let mintamountETH = 0;
+  const items = mints.length;
 
   mints = uniq(mints, false, (tx) => tx.tx_hash);
 
@@ -62,7 +65,11 @@ function processMints(mints, resultArray) {
       mint.ERC20.forEach((tk) => {
         temp.amount += tk.value;
       });
-      resultArray.push({ token: temp.symbol, amount: temp.amount });
+      resultArray.push({
+        token: temp.symbol,
+        amount: temp.amount,
+        items: items,
+      });
     }
   });
 
