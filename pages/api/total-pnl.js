@@ -73,7 +73,7 @@ function processMints(mints, resultArray) {
     }
   });
 
-  resultArray.push({ token: "ETH", amount: mintamountETH });
+  resultArray.push({ token: "ETH", amount: mintamountETH, items: items });
 }
 
 export default async function handler(req, res) {
