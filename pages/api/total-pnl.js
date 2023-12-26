@@ -1,10 +1,6 @@
 // Import necessary modules
 import axios from "axios";
 import { uniq } from "underscore";
-import csvtojson from "csvtojson";
-import fs from "fs/promises";
-import jsonWriter from "fs-json-writer";
-import path from "path";
 
 async function getTotalPNL(vr, wallet) {
   const result = { Address: wallet, SELL: [], PURCHASED: [], MINT: [] };
@@ -19,6 +15,8 @@ async function getTotalPNL(vr, wallet) {
 
 function processTransactions(transactions, resultArray) {
   const Tokens = [];
+
+  const transactions = uniq(transactions, false, (tx) => tx.tx_hash);
 
   transactions.forEach((transaction) => {
     const token =
@@ -50,6 +48,8 @@ function processTransactions(transactions, resultArray) {
 function processMints(mints, resultArray) {
   let mintamountETH = 0;
 
+  mints = uniq(mints, false, (tx) => tx.tx_hash);
+
   mints.forEach((mint) => {
     const temp = {};
 
@@ -78,6 +78,7 @@ export default async function handler(req, res) {
       const vr = await axios.get(
         `https://pnl-api-rust.vercel.app/api/nft1?wallet=${wallet}&token=${token}`
       );
+
       const result = await getTotalPNL(vr, wallet);
       result.meta = vr.data.Analysis.meta;
       res.status(200).json(result);
