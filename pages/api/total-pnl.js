@@ -15,9 +15,10 @@ async function getTotalPNL(vr, wallet) {
 
 function processTransactions(transactions, resultArray) {
   const Tokens = [];
-
   const items = transactions.length;
 
+  console.log(items)
+  if(items)
   transactions = uniq(transactions, false, (tx) => tx.tx_hash);
 
   transactions.forEach((transaction) => {
